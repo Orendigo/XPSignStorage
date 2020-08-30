@@ -1,0 +1,8 @@
+# Note: The signTitle should not be changed once signs have been created.
+# If changed, signs already created will not be able to be accessed.
+Messages:
+    owner-error: "&cError: You are not the owner of this XP sign!"
+    xp-amount-error: "&cError: Not enough XP!"
+    xp-leftover-error: "&cError: There is still XP within this XP sign!"
+    sign-attached-error: "&cError: There is an XP sign attached to this block!"
+    

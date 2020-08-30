@@ -1,0 +1,7 @@
+name: XPSignStorage
+main: net.orendigo.xpsignstorage.XPSignStorage
+version: '1.0'
+author: Orendigo
+api-version: 1.16
+description: XPStorage
+
