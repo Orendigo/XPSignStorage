@@ -1,3 +1,7 @@
+/*
+  https://www.spigotmc.org/threads/how-to-sqlite.56847/
+*/
+
 package net.orendigo.xpsignstorage.database;
 
 import java.io.File;
@@ -18,11 +22,13 @@ public class SQLite extends Database{
         dbName = "xpSigns"; // Set the table name here e.g player_kills
     }
     
-    // table containing all the sign positions
-    // id = unique primary key
+    // Single table containing all information
+    // I originally had two tables, one for signs and one for players
+    // I decided that was unnecessary.
     public String SQLiteCreateSignsTable = "CREATE TABLE IF NOT EXISTS xpSigns (" +
             "`id` int(6) NOT NULL," +
             "`player` varchar(36) NOT NULL," +
+            "`xp` int(10) NOT NULL," +
             "`world` varchar(10) NOT NULL," +
             "`x` int(6) NOT NULL," +
             "`y` int(6) NOT NULL," +

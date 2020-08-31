@@ -1,3 +1,7 @@
+/*
+  https://www.spigotmc.org/threads/how-to-sqlite.56847/
+*/
+
 package net.orendigo.xpsignstorage.database;
 
 import java.util.logging.Level;

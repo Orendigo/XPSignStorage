@@ -1,3 +1,7 @@
+/*
+  https://www.spigotmc.org/threads/how-to-sqlite.56847/
+*/
+
 package net.orendigo.xpsignstorage.database;
 
 import java.sql.Connection;
@@ -59,6 +63,7 @@ public abstract class Database {
             
             while(rs.next())
                 return rs.getString("player");
+            
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
         } finally {
@@ -74,6 +79,87 @@ public abstract class Database {
         return null;
     }
     
+    // getting XP from a sign with a player and location
+    public int getXP(Player player, Location signLoc) {
+        
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement(
+                    "SELECT xp FROM " + signTable + " WHERE " 
+                            + signTable + ".world = \"" + signLoc.getWorld().getName() + "\" AND "
+                            + signTable + ".x = " + signLoc.getX() + " AND "
+                            + signTable + ".y = " + signLoc.getY() + " AND "
+                            + signTable + ".z = " + signLoc.getZ());
+            rs = ps.executeQuery();
+            
+            while(rs.next())
+                return rs.getInt("xp");
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        }
+        return 0;
+    }
+    
+    // setting XP for a sign with a player, a given location, and an amount
+    public void setXP(Player player, Location signLoc, int newXP) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        try {
+            // obtain rowID
+            int rowID = 0;
+            conn = getSQLConnection();
+            ps = conn.prepareStatement(
+                    "SELECT id FROM " + signTable + " WHERE " 
+                            + signTable + ".world = \"" + signLoc.getWorld().getName() + "\" AND "
+                            + signTable + ".x = " + signLoc.getX() + " AND "
+                            + signTable + ".y = " + signLoc.getY() + " AND "
+                            + signTable + ".z = " + signLoc.getZ());
+            rs = ps.executeQuery();
+                        
+            while(rs.next())
+                rowID = rs.getInt(1);
+            
+            // Would I be able to use an Update statement here??
+            ps = conn.prepareStatement("REPLACE INTO " + signTable + " (id, player, xp, world, x, y, z) VALUES(?,?,?,?,?,?,?)");
+            ps.setInt(1, rowID);
+            ps.setString(2, player.getUniqueId().toString());
+            ps.setInt(3, newXP);
+            ps.setString(4, signLoc.getWorld().getName());
+            ps.setFloat(5, signLoc.getBlockX());
+            ps.setFloat(6, signLoc.getBlockY());
+            ps.setFloat(7, signLoc.getBlockZ());
+            ps.executeUpdate();
+            
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+            }
+        } 
+    }
+    
+    // creating a new sign
     public void createSign(Player player, Location signLoc) {
         
         Connection conn = null;
@@ -92,13 +178,14 @@ public abstract class Database {
             rowID = rowID + 1;
             
             // insert sign data
-            ps = conn.prepareStatement("INSERT INTO " + signTable + " (id, player, world, x, y, z) VALUES(?,?,?,?,?,?)");
+            ps = conn.prepareStatement("INSERT INTO " + signTable + " (id, player, xp, world, x, y, z) VALUES(?,?,?,?,?,?,?)");
             ps.setInt(1, rowID);
             ps.setString(2, player.getUniqueId().toString());
-            ps.setString(3, signLoc.getWorld().getName());
-            ps.setFloat(4, signLoc.getBlockX());
-            ps.setFloat(5, signLoc.getBlockY());
-            ps.setFloat(6, signLoc.getBlockZ());
+            ps.setInt(3, 0);
+            ps.setString(4, signLoc.getWorld().getName());
+            ps.setFloat(5, signLoc.getBlockX());
+            ps.setFloat(6, signLoc.getBlockY());
+            ps.setFloat(7, signLoc.getBlockZ());
             ps.executeUpdate();
             
         } catch (SQLException ex) {
@@ -115,6 +202,7 @@ public abstract class Database {
         } 
     }
     
+    // removing sign from the database
     public void removeSign(Location signLoc) {
         Connection conn = null;
         PreparedStatement ps = null;
