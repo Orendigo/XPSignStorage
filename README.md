@@ -1,6 +1,9 @@
 # XPSignStorage
 Store Minecraft XP within signs
 
+# Download
+https://www.spigotmc.org/resources/xpsignstorage.83359/
+
 # About
 This is a recreation of an old Minecraft plugin I used in the past, but have since lost the ability to find.  This was originally going to be a fork of [this repository](https://github.com/GD-gh/XPBank-Spigot) which I felt was very similar to the original plugin I used, but as I progressed I strayed further from this repository to a point where I did not believe it could be considered a fork other than mentioning it here.
 
