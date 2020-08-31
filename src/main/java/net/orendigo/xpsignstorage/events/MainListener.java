@@ -108,7 +108,7 @@ public class MainListener implements Listener {
             // if the event sign is an XP sign
             if (e.getLine(0).equals("[XP]") && e.getLine(1).equals("")) {
                 // if the sign location is not in the database, create new sign.
-                if (this.plugin.getDB().getSignOwner(e.getBlock().getLocation()) == null) {
+                if (this.plugin.getDB().getSignOwner(e.getBlock().getLocation()) == null && e.getPlayer().hasPermission("xpsignstorage.use")) {
                     this.plugin.getDB().createSign(e.getPlayer(), e.getBlock().getLocation());
                     e.setLine(0, ChatColor.translateAlternateColorCodes('&', signTitle));
                     e.setLine(1, ChatColor.translateAlternateColorCodes('&', "&r&20"));

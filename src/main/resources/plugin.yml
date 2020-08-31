@@ -1,7 +1,10 @@
 name: XPSignStorage
 main: net.orendigo.xpsignstorage.XPSignStorage
-version: '2.0'
+version: '2.1'
 author: Orendigo
 api-version: 1.16
 description: XPSignStorage
 
+permissions:
+    xpsignstorage.use:
+        description: Allows the creation and general use of XPSignStorage
